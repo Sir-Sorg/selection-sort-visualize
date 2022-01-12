@@ -1,14 +1,14 @@
 import tkinter as tk
 import re
-from typing import Text
+from time import sleep
 
 
 def creatLabel(howMany):
     # ================= creat Label ===================
     labelList = list()
     for _ in range(howMany):
-        thisOne = tk.Label(master=lblFrm, bg="LIGHTBLUE")
-        thisOne.pack()
+        thisOne = tk.Label(master=lblFrm, bg="LIGHTBLUE", bd=10)
+        thisOne.pack(side=tk.LEFT)
         labelList.append(thisOne)
     return labelList
 
@@ -32,22 +32,23 @@ def printRaw(numList, labelList):
         index += 1
 
 
-def selectionSort(atuple):
+def selectionSort(atuple,labelList):
     # ===== Quantify len,min,index,position of min,start position ====
     alist = list(atuple)
-    lenofList = len(atuple)
-    mini = alist[0]
-    startIndex = index = miniPosition = 0
+    countt = len(atuple)
+    minimum = alist[0]
+    startIndex = index = minimumPosition = 0
     # ================== selection sort ===============
-    for _ in range(lenofList-1):
-        mini, miniPosition = alist[startIndex], startIndex
-        while index < lenofList:
+    for _ in range(countt-1):
+        minimum, minimumPosition = alist[startIndex], startIndex
+        while index < countt:
             thisElement = alist[index]
-            if mini > thisElement:
-                mini = thisElement
-                miniPosition = index
+            if minimum > thisElement:
+                # find the unicorn (target)
+                minimum = thisElement
+                minimumPosition = index
             index += 1
-        alist[startIndex], alist[miniPosition] = alist[miniPosition], alist[startIndex]
+        alist[startIndex], alist[minimumPosition] = alist[minimumPosition], alist[startIndex]
         startIndex += 1
         index = startIndex
         yield alist
@@ -68,10 +69,10 @@ def mainSort():
     printRaw(algorithmItems, labelsList)
     # ================ sort and print =================
     rouncCount = 1
-    for this_round in selectionSort(algorithmItems):
+    for this_round in selectionSort(algorithmItems,labelsList):
         listBox.insert(tk.END, 'Round {} - {}'.format(rouncCount,
                        changeListtoString(this_round)))
-        rouncCount += 1
+        rouncCount += 1 
 
 
 # =================== create widow ================
@@ -81,20 +82,20 @@ window.geometry('800x500')
 window.resizable(0, 0)
 # same as window.resizable(width=False, height=False) ! Big brain Do
 # ==== create 2 Frame to organizing the layout ====
-inpFrm = tk.Frame()
-lblFrm = tk.Frame()
-inpFrm.pack()
+inpFrm = tk.Frame(master=window, height=100)
+inpFrm.pack(fill=tk.X)
+lblFrm = tk.Frame(pady=20)
 # ============== create lable & input =============
 tk.Label(master=inpFrm, text='Please Enter numbers and separate those with \' SPACE \' :',
-         font=("Arial")).pack()
-userEntery = tk.Entry(master=inpFrm, width=70)
-userEntery.pack()
+         font=("Arial")).place(x=20, y=20)
+userEntery = tk.Entry(master=inpFrm, width=70, relief='solid')
+userEntery.place(x=20, y=55)
 # =============== create sort Button ===============
 baseBtn = tk.Button(master=inpFrm, text='Sort',
-                    bg="LIGHTBLUE", command=mainSort)
-baseBtn.pack()
+                    bg="LIGHTBLUE", command=mainSort, relief='solid', borderwidth=1, padx=20, pady=5)
+baseBtn.place(x=650, y=50)
 # =============== create List Box widget ===============
-listBox = tk.Listbox(window, width=90, bg='black', fg='white')
+listBox = tk.Listbox(window, width=90, bg='gray', fg='white', relief='flat')
 listBox.pack()
 # ========= Pack label Frame for this position =========
 lblFrm.pack()
