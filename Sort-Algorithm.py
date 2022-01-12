@@ -21,15 +21,13 @@ def changeListtoString(alist):
     return string[:-2]  # for removing last ','
 
 
-def printRaw(numList):
+def printRaw(numList, labelList):
     # ================ print raw list =================
     listBox.insert(1, 'beginnings : {}'.format(
         changeListtoString(numList)))
     # ======= creat Label and fill by user entry ======
-    numsCount = len(numList)
-    labelsList = creatLabel(numsCount)
     index = 0
-    for thisLabel in labelsList:
+    for thisLabel in labelList:
         thisLabel.config(text='{}'.format(numList[index]))
         index += 1
 
@@ -55,7 +53,7 @@ def selectionSort(atuple):
         yield alist
 
 
-def entryToList():
+def mainSort():
     # ========== covert user input to list ============
     value = userEntery.get()
     value = re.sub(r'\s+', ' ', value)
@@ -64,8 +62,11 @@ def entryToList():
         algorithmItems = tuple(map(lambda x: int(x), algorithmItems))
     except:
         print('you must Enter just number Not chareter! (Error-1)')
+    # ===== create Label and send it for first show =====
+    numsCount = len(algorithmItems)
+    labelsList = creatLabel(numsCount)
+    printRaw(algorithmItems, labelsList)
     # ================ sort and print =================
-    printRaw(algorithmItems)
     rouncCount = 1
     for this_round in selectionSort(algorithmItems):
         listBox.insert(tk.END, 'Round {} - {}'.format(rouncCount,
@@ -85,7 +86,7 @@ tk.Label(window, text='Please Enter numbers and separate those with \' SPACE \' 
 userEntery = tk.Entry(window, width=70)
 userEntery.pack()
 # =============== create sort Button ===============
-baseBtn = tk.Button(window, text='Sort', bg="LIGHTBLUE", command=entryToList)
+baseBtn = tk.Button(window, text='Sort', bg="LIGHTBLUE", command=mainSort)
 baseBtn.pack()
 # =============== create List Box widget ===============
 listBox = tk.Listbox(window, width=90, bg='black', fg='white')
