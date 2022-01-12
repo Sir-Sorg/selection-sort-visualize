@@ -1,5 +1,16 @@
 import tkinter as tk
 import re
+from typing import Text
+
+
+def creatLabel(howMany):
+    # ================= creat Label ===================
+    labelList = list()
+    for _ in range(howMany):
+        thisOne = tk.Label(window, bg="LIGHTBLUE")
+        thisOne.pack()
+        labelList.append(thisOne)
+    return labelList
 
 
 def changeListtoString(alist):
@@ -8,6 +19,19 @@ def changeListtoString(alist):
     for this in alist:
         string = string + str(this) + ', '
     return string[:-2]  # for removing last ','
+
+
+def printRaw(numList):
+    # ================ print raw list =================
+    listBox.insert(1, 'beginnings : {}'.format(
+        changeListtoString(numList)))
+    # ======= creat Label and fill by user entry ======
+    numsCount = len(numList)
+    labelsList = creatLabel(numsCount)
+    index = 0
+    for thisLabel in labelsList:
+        thisLabel.config(text='{}'.format(numList[index]))
+        index += 1
 
 
 def selectionSort(atuple):
@@ -41,8 +65,7 @@ def entryToList():
     except:
         print('you must Enter just number Not chareter! (Error-1)')
     # ================ sort and print =================
-    listBox.insert(1, 'beginnings : {}'.format(
-        changeListtoString(algorithmItems)))
+    printRaw(algorithmItems)
     rouncCount = 1
     for this_round in selectionSort(algorithmItems):
         listBox.insert(tk.END, 'Round {} - {}'.format(rouncCount,
@@ -61,10 +84,10 @@ tk.Label(window, text='Please Enter numbers and separate those with \' SPACE \' 
          font=("Arial")).pack()
 userEntery = tk.Entry(window, width=70)
 userEntery.pack()
-# =============== create submit btn ===============
+# =============== create sort Button ===============
 baseBtn = tk.Button(window, text='Sort', bg="LIGHTBLUE", command=entryToList)
 baseBtn.pack()
-# =============== create Text widget ===============
+# =============== create List Box widget ===============
 listBox = tk.Listbox(window, width=90, bg='black', fg='white')
 listBox.pack()
 
