@@ -1,6 +1,5 @@
 import tkinter as tk
 import re
-from time import sleep
 
 
 def creatLabel(howMany):
@@ -32,26 +31,47 @@ def printRaw(numList, labelList):
         index += 1
 
 
-def selectionSort(atuple,labelList):
+def set_color(labelList, index, color, start):
+    colorDict = {'b': '#6699ff', 'r': '#ff6666',
+                 'y': '#ffff99', 'd': 'LIGHTBLUE'}
+    labelList[index].config(bg=colorDict[color])
+    # read it cerfully
+    if color != 'y' and start != index:
+        labelList[index-1].config(bg=colorDict['d'])
+    elif start == len(labelList)-2:
+        labelList[-1].config(bg=colorDict['y'])
+    else:
+        labelList[-1].config(bg=colorDict['d'])
+
+
+def assign(obj, value):
+    obj.config(text=value)
+
+
+def selectionSort(atuple, labelList):
     # ===== Quantify len,min,index,position of min,start position ====
-    alist = list(atuple)
-    countt = len(atuple)
-    minimum = alist[0]
-    startIndex = index = minimumPosition = 0
+    numList = list(atuple)
+    countt = len(numList)
     # ================== selection sort ===============
+    startI = 0
+    delay = 500
     for _ in range(countt-1):
-        minimum, minimumPosition = alist[startIndex], startIndex
-        while index < countt:
-            thisElement = alist[index]
-            if minimum > thisElement:
-                # find the unicorn (target)
-                minimum = thisElement
-                minimumPosition = index
-            index += 1
-        alist[startIndex], alist[minimumPosition] = alist[minimumPosition], alist[startIndex]
-        startIndex += 1
-        index = startIndex
-        yield alist
+        minn = numList[startI]
+        minPosition = i = startI
+        for thisOne in numList[startI:]:
+            window.after(delay, set_color, labelList, i, 'b', startI)
+            if thisOne < minn:
+                minn = thisOne
+                minPosition = i
+                window.after(delay, set_color, labelList, i, 'r', startI)
+            i += 1
+            delay += 500
+        window.after(delay, assign, labelList[startI], numList[minPosition])
+        window.after(delay, assign, labelList[minPosition], numList[startI])
+        numList[startI], numList[minPosition] = numList[minPosition], numList[startI]
+        window.after(delay, set_color, labelList, startI, 'y', startI)
+        startI += 1
+        yield numList
 
 
 def mainSort():
@@ -69,10 +89,10 @@ def mainSort():
     printRaw(algorithmItems, labelsList)
     # ================ sort and print =================
     rouncCount = 1
-    for this_round in selectionSort(algorithmItems,labelsList):
+    for this_round in selectionSort(algorithmItems, labelsList):
         listBox.insert(tk.END, 'Round {} - {}'.format(rouncCount,
                        changeListtoString(this_round)))
-        rouncCount += 1 
+        rouncCount += 1
 
 
 # =================== create widow ================
