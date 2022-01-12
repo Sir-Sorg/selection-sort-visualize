@@ -7,7 +7,7 @@ def creatLabel(howMany):
     # ================= creat Label ===================
     labelList = list()
     for _ in range(howMany):
-        thisOne = tk.Label(window, bg="LIGHTBLUE")
+        thisOne = tk.Label(master=lblFrm, bg="LIGHTBLUE")
         thisOne.pack()
         labelList.append(thisOne)
     return labelList
@@ -80,17 +80,23 @@ window.title('Sort Algorithm')
 window.geometry('800x500')
 window.resizable(0, 0)
 # same as window.resizable(width=False, height=False) ! Big brain Do
+# ==== create 2 Frame to organizing the layout ====
+inpFrm = tk.Frame()
+lblFrm = tk.Frame()
+inpFrm.pack()
 # ============== create lable & input =============
-tk.Label(window, text='Please Enter numbers and separate those with \' SPACE \' :',
+tk.Label(master=inpFrm, text='Please Enter numbers and separate those with \' SPACE \' :',
          font=("Arial")).pack()
-userEntery = tk.Entry(window, width=70)
+userEntery = tk.Entry(master=inpFrm, width=70)
 userEntery.pack()
 # =============== create sort Button ===============
-baseBtn = tk.Button(window, text='Sort', bg="LIGHTBLUE", command=mainSort)
+baseBtn = tk.Button(master=inpFrm, text='Sort',
+                    bg="LIGHTBLUE", command=mainSort)
 baseBtn.pack()
 # =============== create List Box widget ===============
 listBox = tk.Listbox(window, width=90, bg='black', fg='white')
 listBox.pack()
-
+# ========= Pack label Frame for this position =========
+lblFrm.pack()
 
 window.mainloop()
