@@ -17,7 +17,7 @@ def changeListtoString(alist):
     string = ''
     for this in alist:
         string = string + str(this) + ', '
-    return string[:-2]  # for removing last ','
+    return string[:-2]  # for removing last ', '
 
 
 def printRaw(numList, labelList):
@@ -31,17 +31,26 @@ def printRaw(numList, labelList):
         index += 1
 
 
-def set_color(labelList, index, color, start):
+def clrPrevious(labelList, index, lastRed):
     colorDict = {'b': '#6699ff', 'r': '#ff6666',
                  'y': '#ffff99', 'd': 'LIGHTBLUE'}
-    labelList[index].config(bg=colorDict[color])
-    # read it cerfully
-    if color != 'y' and start != index:
-        labelList[index-1].config(bg=colorDict['d'])
-    elif start == len(labelList)-2:
-        labelList[-1].config(bg=colorDict['y'])
-    else:
+    preElem = labelList[index-1]
+    crntElem = labelList[index]
+    if crntElem.cget('bg') == colorDict['r'] and lastRed != index:
+        labelList[lastRed].config(bg=colorDict['d'])
+    if preElem.cget('bg') == colorDict['b']:
+        preElem.config(bg=colorDict['d'])
+    if crntElem.cget('bg') == colorDict['y']:
         labelList[-1].config(bg=colorDict['d'])
+
+
+def set_color(labelList, index, color, lastRed):
+    colorDict = {'b': '#6699ff', 'r': '#ff6666',
+                 'y': '#ffff99', 'd': 'LIGHTBLUE', 'yy': '#ffff99'}
+    labelList[index].config(bg=colorDict[color])
+    # yy mean the sort has finished
+    if color != 'yy':
+        clrPrevious(labelList, index, lastRed)
 
 
 def assign(obj, value):
@@ -57,24 +66,27 @@ def selectionSort(atuple, labelList):
     delay = 500
     for _ in range(countt-1):
         minn = numList[startI]
-        minPosition = i = startI
+        minPosition = lastRed = i = startI
         for thisOne in numList[startI:]:
-            window.after(delay, set_color, labelList, i, 'b', startI)
-            if thisOne < minn:
+            window.after(delay, set_color, labelList, i, 'b', lastRed)
+            if thisOne <= minn:
                 minn = thisOne
                 minPosition = i
-                window.after(delay, set_color, labelList, i, 'r', startI)
+                window.after(delay, set_color, labelList, i, 'r', lastRed)
+                lastRed = minPosition
             i += 1
             delay += 500
+        window.after(delay, set_color, labelList, lastRed, 'd', lastRed)
         window.after(delay, assign, labelList[startI], numList[minPosition])
         window.after(delay, assign, labelList[minPosition], numList[startI])
+        window.after(delay, set_color, labelList, startI, 'y', lastRed)
         numList[startI], numList[minPosition] = numList[minPosition], numList[startI]
-        window.after(delay, set_color, labelList, startI, 'y', startI)
         startI += 1
         yield numList
+    window.after(delay, set_color, labelList, countt-1, 'yy', lastRed)
 
 
-def clearr():
+def clrAll():
     listBox.delete(0, tk.END)
     userEntery.delete(0, tk.END)
     tempFrm.destroy()
@@ -100,7 +112,7 @@ def mainSort():
     # ============== creat Clear-Button ===============
     global clrBtn
     clrBtn = tk.Button(master=inpFrm, text='Clear',
-                       bg="#ffff99", command=clearr, relief='solid', borderwidth=1, padx=16, pady=5)
+                       bg="#ffff99", command=clrAll, relief='solid', borderwidth=1, padx=16, pady=5)
     clrBtn.place(x=610, y=50)
     # ================ sort and print =================
     rouncCount = 1
