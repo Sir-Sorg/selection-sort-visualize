@@ -6,7 +6,7 @@ def creatLabel(howMany):
     # ================= creat Label ===================
     labelList = list()
     for _ in range(howMany):
-        thisOne = tk.Label(master=lblFrm, bg="LIGHTBLUE", bd=10)
+        thisOne = tk.Label(master=tempFrm, bg="LIGHTBLUE", bd=10)
         thisOne.pack(side=tk.LEFT)
         labelList.append(thisOne)
     return labelList
@@ -74,6 +74,13 @@ def selectionSort(atuple, labelList):
         yield numList
 
 
+def clearr():
+    listBox.delete(0, tk.END)
+    userEntery.delete(0, tk.END)
+    tempFrm.destroy()
+    clrBtn.destroy()
+
+
 def mainSort():
     # ========== covert user input to list ============
     value = userEntery.get()
@@ -84,13 +91,21 @@ def mainSort():
     except:
         print('you must Enter just number Not chareter! (Error-1)')
     # ===== create Label and send it for first show =====
+    global tempFrm
+    tempFrm = tk.Frame(master=lblFrm)
+    tempFrm.pack()
     numsCount = len(algorithmItems)
     labelsList = creatLabel(numsCount)
     printRaw(algorithmItems, labelsList)
+    # ============== creat Clear-Button ===============
+    global clrBtn
+    clrBtn = tk.Button(master=inpFrm, text='Clear',
+                       bg="#ffff99", command=clearr, relief='solid', borderwidth=1, padx=16, pady=5)
+    clrBtn.place(x=610, y=50)
     # ================ sort and print =================
     rouncCount = 1
     for this_round in selectionSort(algorithmItems, labelsList):
-        listBox.insert(tk.END, 'Round {} - {}'.format(rouncCount,
+        listBox.insert(tk.END, 'Round {}: {}'.format(rouncCount,
                        changeListtoString(this_round)))
         rouncCount += 1
 
@@ -98,26 +113,29 @@ def mainSort():
 # =================== create widow ================
 window = tk.Tk()
 window.title('Sort Algorithm')
-window.geometry('800x500')
+window.geometry('800x400')
 window.resizable(0, 0)
 # same as window.resizable(width=False, height=False) ! Big brain Do
-# ==== create 2 Frame to organizing the layout ====
+# ==== create 3 Frame to organizing the layout ====
 inpFrm = tk.Frame(master=window, height=100)
 inpFrm.pack(fill=tk.X)
 lblFrm = tk.Frame(pady=20)
+terFrm = tk.Frame(pady=20)
 # ============== create lable & input =============
 tk.Label(master=inpFrm, text='Please Enter numbers and separate those with \' SPACE \' :',
-         font=("Arial")).place(x=20, y=20)
-userEntery = tk.Entry(master=inpFrm, width=70, relief='solid')
-userEntery.place(x=20, y=55)
+         font=("Arial")).place(x=38, y=20)
+userEntery = tk.Entry(master=inpFrm, width=69, relief='solid')
+userEntery.place(x=38, y=55)
 # =============== create sort Button ===============
 baseBtn = tk.Button(master=inpFrm, text='Sort',
                     bg="LIGHTBLUE", command=mainSort, relief='solid', borderwidth=1, padx=20, pady=5)
-baseBtn.place(x=650, y=50)
+baseBtn.place(x=688, y=50)
 # =============== create List Box widget ===============
-listBox = tk.Listbox(window, width=90, bg='gray', fg='white', relief='flat')
+listBox = tk.Listbox(master=terFrm, width=90, bg='gray',
+                     fg='white', relief='flat')
 listBox.pack()
 # ========= Pack label Frame for this position =========
 lblFrm.pack()
+terFrm.pack(side=tk.BOTTOM)
 
 window.mainloop()
