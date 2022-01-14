@@ -94,6 +94,7 @@ def clrAll():
 
 
 def mainSort():
+    listBox.delete(0, tk.END)
     # ========== covert user input to list ============
     value = userEntery.get()
     value = re.sub(r'\s+', ' ', value)
@@ -122,6 +123,18 @@ def mainSort():
         rouncCount += 1
 
 
+def BeautifyLb():
+    lg = '''\n
+           ____       _           _   _                              _   
+          / ___|  ___| | ___  ___| |_(_) ___  _ __    ___  ___  _ __| |_ 
+          \___ \ / _ \ |/ _ \/ __| __| |/ _ \| '_ \  / __|/ _ \| '__| __|
+           ___) |  __/ |  __/ (__| |_| | (_) | | | | \__ \ (_) | |  | |_ 
+          |____/ \___|_|\___|\___|\__|_|\___/|_| |_| |___/\___/|_|   \__|
+    '''
+    for line in lg.split('\n'):
+        listBox.insert(tk.END, line)
+
+
 # =================== create widow ================
 window = tk.Tk()
 window.title('Sort Algorithm')
@@ -144,8 +157,9 @@ baseBtn = tk.Button(master=inpFrm, text='Sort',
 baseBtn.place(x=688, y=50)
 # =============== create List Box widget ===============
 listBox = tk.Listbox(master=terFrm, width=90, bg='gray',
-                     fg='white', relief='flat')
+                     fg='white', relief='flat', font=("consolas", 10))
 listBox.pack()
+BeautifyLb()
 # ========= Pack label Frame for this position =========
 lblFrm.pack()
 terFrm.pack(side=tk.BOTTOM)
